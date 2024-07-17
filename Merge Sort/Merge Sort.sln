@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Merge Sort", "Merge Sort\Merge Sort.csproj", "{2806AFEA-F8EF-4B67-8451-B7E7480AA49E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Two Large Integers", "Two Large Integers\Two Large Integers.csproj", "{DF6D31AA-C24E-4204-A70D-510A79E79990}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2806AFEA-F8EF-4B67-8451-B7E7480AA49E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2806AFEA-F8EF-4B67-8451-B7E7480AA49E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2806AFEA-F8EF-4B67-8451-B7E7480AA49E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF6D31AA-C24E-4204-A70D-510A79E79990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF6D31AA-C24E-4204-A70D-510A79E79990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF6D31AA-C24E-4204-A70D-510A79E79990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF6D31AA-C24E-4204-A70D-510A79E79990}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
