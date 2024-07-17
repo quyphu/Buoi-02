@@ -1,143 +1,113 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Program
+namespace Two_Large_Integers
 {
-    public static void Main()
+    class Program
     {
-        string num1 = "12345678901234567890";
-        string num2 = "98765432109876543210";
-
-        string result = Multiply(num1, num2);
-
-        Console.WriteLine("Ket qua: " + result);
-    }
-
-    // Hàm nhân hai số nguyên lớn
-    public static string Multiply(string num1, string num2)
-    {
-        // Xử lý trường hợp đặc biệt khi có một trong hai số là "0"
-        if (num1 == "0" || num2 == "0")
-            return "0";
-
-        // Độ dài của hai số nguyên lớn
-        int n = Math.Max(num1.Length, num2.Length);
-
-        // Chuyển hai số nguyên lớn thành dạng mảng int để tính toán
-        int[] arr1 = new int[n];
-        int[] arr2 = new int[n];
-
-        for (int i = 0; i < num1.Length; i++)
-            arr1[i] = num1[num1.Length - 1 - i] - '0';
-
-        for (int i = 0; i < num2.Length; i++)
-            arr2[i] = num2[num2.Length - 1 - i] - '0';
-
-        // Gọi hàm đệ quy để nhân hai số
-        int[] resultArr = Multiply(arr1, arr2);
-
-        // Chuyển kết quả từ mảng int sang dạng chuỗi
-        string result = "";
-        for (int i = resultArr.Length - 1; i >= 0; i--)
-            result += resultArr[i];
-
-        return result;
-    }
-
-    // Hàm đệ quy để nhân hai mảng số nguyên lớn
-    private static int[] Multiply(int[] arr1, int[] arr2)
-    {
-        int n = arr1.Length;
-
-        // Xử lý trường hợp cơ sở khi n = 1
-        if (n == 1)
+        static void Main(string[] args)
         {
-            int[] result = new int[2];
-            int product = arr1[0] * arr2[0];
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            result[0] = product % 10; // lưu số hàng đơn vị
-            result[1] = product / 10; // lưu số hàng chục
+            // Khởi tạo hai số nguyên lớn
+            string num1 = "123456789012345678901234567890";
+            string num2 = "987654321098765432109876543210";
 
-            return result;
+            // Nhân hai số
+            string result = MultiplyLargeNumbers(num1, num2);
+
+            // Hiển thị kết quả
+            Console.WriteLine("Kết quả của phép nhân là:");
+            Console.WriteLine(result);
+
+            // Để chương trình không tự động đóng, chờ người dùng nhấn một phím
+            Console.WriteLine("Nhấn phím bất kỳ để thoát...");
+            Console.ReadKey(); // Gọi phương thức ReadKey để chờ nhấn phím
         }
 
-        // Chia mảng thành hai nửa
-        int half = n / 2;
-        int[] arr1Low = new int[half];
-        int[] arr1High = new int[n - half];
-        int[] arr2Low = new int[half];
-        int[] arr2High = new int[n - half];
-
-        Array.Copy(arr1, 0, arr1Low, 0, half);
-        Array.Copy(arr1, half, arr1High, 0, n - half);
-        Array.Copy(arr2, 0, arr2Low, 0, half);
-        Array.Copy(arr2, half, arr2High, 0, n - half);
-
-        // Đệ quy nhân hai nửa của mỗi mảng
-        int[] z0 = Multiply(arr1Low, arr2Low);
-        int[] z2 = Multiply(arr1High, arr2High);
-
-        // Nhân (A0 + A1)(B0 + B1) - A0B0 - A1B1 để tính z1
-        int[] A0plusA1 = Add(arr1Low, arr1High);
-        int[] B0plusB1 = Add(arr2Low, arr2High);
-        int[] z1 = Subtract(Subtract(Multiply(A0plusA1, B0plusB1), z0), z2);
-
-        // Tạo mảng kết quả
-        int[] result = new int[2 * n];
-        Array.Copy(z0, 0, result, 0, z0.Length);
-        Array.Copy(z1, 0, result, half, z1.Length);
-        Array.Copy(z2, 0, result, 2 * half, z2.Length);
-
-        // Loại bỏ các số 0 không cần thiết ở đầu mảng
-        int i = result.Length - 1;
-        while (i > 0 && result[i] == 0)
-            i--;
-
-        Array.Resize(ref result, i + 1);
-
-        return result;
-    }
-
-    // Hàm cộng hai mảng số nguyên lớn
-    private static int[] Add(int[] arr1, int[] arr2)
-    {
-        int n = Math.Max(arr1.Length, arr2.Length);
-        int[] result = new int[n + 1]; // Tăng kích thước mảng để xử lý trường hợp cộng có thể tăng thêm 1 chữ số
-
-        int carry = 0;
-        for (int i = 0; i < n; i++)
+        static string MultiplyLargeNumbers(string num1, string num2)
         {
-            int sum = (i < arr1.Length ? arr1[i] : 0) + (i < arr2.Length ? arr2[i] : 0) + carry;
-            result[i] = sum % 10;
-            carry = sum / 10;
+            // Xử lý trường hợp đặc biệt khi có một trong hai số là "0"
+            if (num1 == "0" || num2 == "0")
+                return "0";
+
+            // Độ dài của hai số
+            int n = Math.Max(num1.Length, num2.Length);
+
+            // Chia đôi các số để nhân theo thuật toán Karatsuba
+            string a = num1.Substring(0, num1.Length / 2);
+            string b = num1.Substring(num1.Length / 2);
+            string c = num2.Substring(0, num2.Length / 2);
+            string d = num2.Substring(num2.Length / 2);
+
+            // Đệ quy để tính các giá trị con
+            string ac = MultiplyLargeNumbers(a, c);
+            string bd = MultiplyLargeNumbers(b, d);
+
+            // Tính (a+b)(c+d) - ac - bd
+            string ab = AddLargeNumbers(a, b);
+            string cd = AddLargeNumbers(c, d);
+            string abcd = MultiplyLargeNumbers(ab, cd);
+            string adbc = SubtractLargeNumbers(SubtractLargeNumbers(abcd, ac), bd);
+
+            // Tạo chuỗi kết quả
+            string result = AddLargeNumbers(AddLargeNumbers(ac + new string('0', n), adbc + new string('0', n / 2)), bd);
+            return result.TrimStart('0');
         }
 
-        result[n] = carry; // Lưu số dư nếu có
-
-        return result;
-    }
-
-    // Hàm trừ hai mảng số nguyên lớn (arr1 - arr2), với giả định arr1 >= arr2
-    private static int[] Subtract(int[] arr1, int[] arr2)
-    {
-        int n = arr1.Length;
-        int[] result = new int[n];
-
-        int borrow = 0;
-        for (int i = 0; i < n; i++)
+        // Hàm cộng hai số nguyên lớn
+        static string AddLargeNumbers(string num1, string num2)
         {
-            int diff = arr1[i] - (i < arr2.Length ? arr2[i] : 0) - borrow;
-            if (diff < 0)
+            StringBuilder sb = new StringBuilder();
+            int carry = 0;
+            int i = num1.Length - 1, j = num2.Length - 1;
+
+            while (i >= 0 || j >= 0 || carry > 0)
             {
-                diff += 10;
-                borrow = 1;
+                int x = i >= 0 ? num1[i--] - '0' : 0;
+                int y = j >= 0 ? num2[j--] - '0' : 0;
+                int sum = x + y + carry;
+                sb.Insert(0, sum % 10);
+                carry = sum / 10;
             }
-            else
-            {
-                borrow = 0;
-            }
-            result[i] = diff;
+
+            return sb.ToString();
         }
 
-        return result;
+        // Hàm trừ hai số nguyên lớn (num1 - num2), với giả định num1 >= num2
+        static string SubtractLargeNumbers(string num1, string num2)
+        {
+            StringBuilder sb = new StringBuilder();
+            int i = num1.Length - 1, j = num2.Length - 1;
+            int borrow = 0;
+
+            while (i >= 0)
+            {
+                int x = num1[i--] - '0';
+                int y = j >= 0 ? num2[j--] - '0' : 0;
+                int diff = x - y - borrow;
+
+                if (diff < 0)
+                {
+                    diff += 10;
+                    borrow = 1;
+                }
+                else
+                {
+                    borrow = 0;
+                }
+
+                sb.Insert(0, diff);
+            }
+
+            // Loại bỏ các số 0 không cần thiết ở đầu
+            while (sb.Length > 1 && sb[0] == '0')
+                sb.Remove(0, 1);
+
+            return sb.ToString();
+        }
     }
 }
